@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
+  <title>MediaPipe 表情辨識（純前端）</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <h1>即時表情偵測與語音回饋</h1>
+    <div class="video-wrap">
+      <video id="video" playsinline autoplay muted></video>
+      <canvas id="output"></canvas>
+    </div>
+
+    <div class="controls">
+      <label>
+        <input type="checkbox" id="rearCam"> 使用後置相機（環境）
+      </label>
+      <button id="startBtn">開始</button>
+      <div id="message" class="message"></div>
+    </div>
+
+    <footer>支援手機瀏覽器（Chrome / Safari）。點選「開始」並允許相機權限。</footer>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
