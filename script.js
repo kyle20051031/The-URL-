@@ -30,29 +30,45 @@ function distance(a,b){
 
 function detectExpression(landmarks){
   // landmarks are normalized (x,y) in video space
-  // use eye outer corners to normalize face width
   const leftOuterEye = landmarks[33];
   const rightOuterEye = landmarks[263];
   const eyeDist = distance(leftOuterEye,rightOuterEye);
 
-  // mouth corners (approx): 61 (left), 291 (right)
   const leftMouth = landmarks[61];
   const rightMouth = landmarks[291];
   const mouthWidth = distance(leftMouth,rightMouth);
 
-  // lip vertical distance: 13 (upper lip), 14 (lower lip)
   const upperLip = landmarks[13];
   const lowerLip = landmarks[14];
   const mouthOpen = distance(upperLip,lowerLip);
 
+  const leftBrow = landmarks[105];
+  const rightBrow = landmarks[334];
+  const leftEyeTop = landmarks[159];
+  const rightEyeTop = landmarks[386];
+  const browHeight = ((leftEyeTop.y - leftBrow.y) + (rightEyeTop.y - rightBrow.y)) / 2;
+
+  const mouthCenterY = (leftMouth.y + rightMouth.y) / 2;
+  const cornerLift = mouthCenterY - ((upperLip.y + lowerLip.y) / 2);
+
   const smileRatio = mouthWidth / eyeDist;
   const openRatio = mouthOpen / eyeDist;
+  const browRatio = browHeight / eyeDist;
 
-  if(smileRatio > 0.48){
-    return 'smile';
-  }
-  if(openRatio > 0.28){
+  if(openRatio > 0.32){
     return 'surprised';
+  }
+  if(smileRatio > 0.48 && cornerLift > 0.01){
+    return 'happy';
+  }
+  if(smileRatio > 0.4 && cornerLift > 0.0){
+    return 'content';
+  }
+  if(cornerLift < -0.02){
+    return 'sad';
+  }
+  if(browRatio < 0.14){
+    return 'angry';
   }
   return 'neutral';
 }
@@ -79,14 +95,24 @@ function onResults(results){
     const expr = detectExpression(landmarks);
     if(expr !== lastExpression){
       lastExpression = expr;
-      if(expr === 'smile'){
-        messageEl.textContent = '偵測到笑臉 😊';
+      if(expr === 'happy'){
+        messageEl.textContent = '偵測到開心表情 😄';
         speak('你今天看起來心情不錯喔！');
+      } else if(expr === 'content'){
+        messageEl.textContent = '偵測到愉悅表情 🙂';
+        speak('保持這種輕鬆舒服的感覺吧。');
       } else if(expr === 'surprised'){
-        messageEl.textContent = '偵測到驚訝 😲';
+        messageEl.textContent = '偵測到驚訝表情 😲';
         speak('哇，你看起來很驚訝耶！');
+      } else if(expr === 'sad'){
+        messageEl.textContent = '偵測到傷心表情 😢';
+        speak('如果你不開心，記得深呼吸，放慢一下。');
+      } else if(expr === 'angry'){
+        messageEl.textContent = '偵測到生氣表情 😠';
+        speak('你看起來有點不高興，試著放鬆一下。');
       } else {
-        messageEl.textContent = '中性表情';
+        messageEl.textContent = '偵測到中性表情';
+        speak('你現在看起來很自然。');
       }
     }
   }

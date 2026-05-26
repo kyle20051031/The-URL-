@@ -1,6 +1,6 @@
 # MediaPipe 前端表情辨識（純前端）
 
-這是一個純前端示範，使用 MediaPipe FaceMesh 在瀏覽器即時偵測表情，並使用 Web Speech API 提供語音回饋。
+這是一個純前端示範，使用 MediaPipe FaceMesh 在瀏覽器即時偵測多種表情（開心、愉悅、驚訝、傷心、生氣、中性），並使用 Web Speech API 提供語音回饋。
 
 主要檔案
 - `index.html`：主頁面
